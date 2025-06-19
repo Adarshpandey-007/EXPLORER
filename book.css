@@ -1,0 +1,171 @@
+body {
+    font-family: Garamond, serif;
+    color: #333;
+    background-image: url(parchment_texture.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+  }
+  
+  header {
+    background-color: #9b7045;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    display: inline-block;
+    font-weight: bold;
+  }
+  
+  nav a:hover {
+    background-color: #7f5b37;
+  }
+  
+
+  .categories{
+   width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 20px 0;
+      padding: 20px;
+   
+  }
+
+  .img{
+    width: 20%;
+    
+  }
+
+  #text{
+    text-align: right;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  .card {
+    width: 100%;
+  
+    box-shadow: 0 0 5px rgb(145, 93, 56);
+    border-radius: 5px;
+   
+  }
+
+  .card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .card h3 {
+    color: #000000;
+    margin: 10px 0;
+  }
+
+  .card p {
+    color: #666666;
+    font-size: 14px;
+  }
+
+  .card a {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: #FFFFFF;
+    background-color: #9b7045;
+    padding: 10px;
+    margin: 10px 0;
+    
+  }
+
+  
+  .card a:hover {
+    background-color: #56402a;
+  }
+
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  p {
+    line-height: 1.5;
+  }
+  
+  .btn{
+    border-radius: 5px;
+  }
+  /* aside {
+    float: right;
+    width: 25%;
+    padding: 20px;
+    background-color: #f5f2ed;
+    border-left: 5px solid #d0c6b8;
+  } */
+  
+  #form {
+    margin-bottom: 6px;
+    float: right;
+    width: 25%;
+    padding: 20px;
+    background-color:  BBAB8C;;
+    border-left: 5px solid #d0c6b8;
+    border-right: 5px solid #d0c6b8;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  #search-input{
+    width: 60%;
+  }
+  
+  input, button {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  #button {
+    background-color: #d0c6b8;
+    color: #333;
+    cursor: pointer;
+    width: 20%;
+  }
+  
+  /* ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  } */
+  
+  a:link, a:visited {
+    color: #333;
+  }
+  #right{
+    text-align: center;
+    padding: 20px;
+    
+
+  }
+  
+  footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #9b7045;
+    color: #fff;
+    width: auto;
+  }
+  
+  /* Add animations */
+  
