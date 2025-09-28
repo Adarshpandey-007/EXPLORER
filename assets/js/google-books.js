@@ -38,6 +38,14 @@ class GoogleBooksAPI {
 
     init() {
         this.setupEventListeners();
+        // Fire a ready event quickly so pages can start searching without waiting for popular books
+        setTimeout(() => {
+            if (!this._readyDispatched) {
+                this._readyDispatched = true;
+                document.dispatchEvent(new CustomEvent('GoogleBooksReady', { detail: { ready: true } }));
+            }
+        }, 0);
+        // Background load of popular books (non-blocking)
         this.loadPopularBooks();
     }
 
@@ -504,7 +512,13 @@ let googleBooks;
 function initializeGoogleBooks() {
     if (!googleBooks) {
         googleBooks = new GoogleBooksAPI();
+        // Attach to window explicitly for pages relying on it
+        window.googleBooks = googleBooks;
         console.log('Google Books API initialized');
+        // In case init dispatch missed due to timing
+        document.dispatchEvent(new CustomEvent('GoogleBooksReady', { detail: { ready: true } }));
+    } else if (!window.googleBooks) {
+        window.googleBooks = googleBooks;
     }
 }
 

@@ -139,7 +139,7 @@
             <div class="search-hero">
                 <div class="search-container" style="margin-bottom: 20px;">
                     <input type="text" id="main-search" class="search-input" placeholder="Search for books, authors, or topics..." style="background: rgba(255,255,255,0.9); color: var(--text-dark);">
-                    <button class="search-button" onclick="searchBooks()">🔍 Search</button>
+                    <button class="search-button" id="main-search-btn" disabled style="opacity:.6;cursor:not-allowed;" onclick="searchBooks()">🔍 Search</button>
                 </div>
                 
                 <div class="category-tabs">
@@ -282,8 +282,30 @@
             // Initialize category tabs
             const tabButtons = document.querySelectorAll('.tab-btn');
             const searchInput = document.getElementById('main-search');
-            let currentCategory = '';
+            // expose globally so searchBooks() (global scope) can access
+            window.currentCategory = '';
             let autoSearch = false;
+
+            // Prepare readiness for googleBooks
+            let googleBooksReady = false;
+            let pendingAutoSearch = false;
+            const searchBtn = document.getElementById('main-search-btn');
+
+            function waitForGoogleBooks(maxMs = 8000) {
+                const start = Date.now();
+                return new Promise(resolve => {
+                    const tick = () => {
+                        if (window.googleBooks) {
+                            googleBooksReady = true;
+                            if (searchBtn) { searchBtn.disabled = false; searchBtn.style.opacity=''; searchBtn.style.cursor='pointer'; }
+                            return resolve(true);
+                        }
+                        if (Date.now() - start > maxMs) return resolve(false);
+                        setTimeout(tick, 150);
+                    };
+                    tick();
+                });
+            }
 
             // Read query params (?category= & ?q=)
             const params = new URLSearchParams(window.location.search);
@@ -294,7 +316,7 @@
                 if (btn) {
                     tabButtons.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    currentCategory = btn.dataset.category;
+                    window.currentCategory = btn.dataset.category || '';
                 }
                 // Insert back link
                 const hero = document.querySelector('.hero-books .container');
@@ -317,7 +339,7 @@
                     // Add active class to clicked button
                     this.classList.add('active');
                     // Update current category
-                    currentCategory = this.dataset.category;
+                    window.currentCategory = this.dataset.category || '';
                     // Perform search if there's a query
                     const query = searchInput.value.trim();
                     if (query) {
@@ -336,17 +358,43 @@
             // Load featured books on page load
             loadFeaturedBooks();
 
-            // If params provided, run initial search after small delay
-            if (autoSearch) {
-                setTimeout(() => searchBooks(), 400);
-            }
+            // Wait for googleBooks then maybe auto-search
+            // Event-based readiness (faster than polling)
+            document.addEventListener('GoogleBooksReady', () => {
+                if (!googleBooksReady && window.googleBooks) {
+                    googleBooksReady = true;
+                    if (searchBtn) { searchBtn.disabled = false; searchBtn.style.opacity=''; searchBtn.style.cursor='pointer'; }
+                }
+                if (autoSearch) {
+                    setTimeout(() => searchBooks(), 150);
+                }
+            });
+
+            waitForGoogleBooks().then((ok) => {
+                if (ok) {
+                    if (autoSearch) setTimeout(() => searchBooks(), 180);
+                }
+            });
             const yearSpan = document.getElementById('year');
             if (yearSpan) yearSpan.textContent = new Date().getFullYear();
         });
         
+        let __searchBusy = false;
+        async function ensureBookEngineReady() {
+            if (window.googleBooks) return true;
+            // brief passive wait if search clicked early
+            for (let i=0;i<10;i++) {
+                if (window.googleBooks) return true;
+                await new Promise(r=> setTimeout(r,150));
+            }
+            return !!window.googleBooks;
+        }
         async function searchBooks() {
             const query = document.getElementById('main-search').value.trim();
             if (!query) return;
+            if (__searchBusy) return; // debounce rapid clicks
+            __searchBusy = true;
+            const selectedCategory = (window.currentCategory || '').trim();
             
             const loading = document.getElementById('loading');
             const results = document.getElementById('search-results');
@@ -356,7 +404,11 @@
             results.style.display = 'none';
             
             try {
-                const books = await googleBooks.searchBooks(query, currentCategory, 16);
+                const ready = await ensureBookEngineReady();
+                if (!ready) {
+                    throw new Error('Book engine not ready yet. Please wait a moment and retry.');
+                }
+                const books = await window.googleBooks.searchBooks(query, selectedCategory, 16);
                 
                 if (books.length > 0) {
                     grid.innerHTML = books.map(book => googleBooks.createBookCard(book)).join('');
@@ -371,10 +423,12 @@
                 }
             } catch (error) {
                 console.error('Search error:', error);
-                grid.innerHTML = '<p>Sorry, there was an error searching for books. Please try again.</p>';
+                const reason = (error && error.message) ? ` <small style="display:block;opacity:.7;">(${error.message})</small>` : '';
+                grid.innerHTML = '<p>Sorry, there was an error searching for books. Please try again.' + reason + '</p>';
                 results.style.display = 'block';
             } finally {
                 loading.style.display = 'none';
+                setTimeout(()=> { __searchBusy = false; }, 300); // release after short delay
             }
         }
         

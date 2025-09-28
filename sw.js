@@ -1,13 +1,14 @@
 /* Service Worker for Book Shelf Explorer
- * Version: v7
- * Changes (v7):
- *  - Added precache for reader & gemini client scripts to improve first-load reliability
- *  - Added /pages/reader.html to shell precache (still network-first for navigations)
- *  - Explicit bypass for Gemini API (generativelanguage.googleapis.com) so responses are never cached
- *  - Prep for future integrity/manifest revisioning
- *  - Carryover: navigation preload, TTL API caching, image expiration & trim utilities
+ * Version: v8
+ * Changes (v8):
+ *  - Version bump to invalidate v7 caches after recent JS/page adjustments
+ *  - Ensured google books & AI related scripts remain in precache list
+ *  - (Future) Reserved space for hash-based revisioning / offline analytics trimming
+ * Carryover:
+ *  - Navigation preload, offline fallback, TTL API caching, selective Gemini bypass
+ *  - Image cache expiration + cache trimming utilities
  */
-const SW_VERSION = 'v7';
+const SW_VERSION = 'v8';
 
 // Cache name helpers (allows selective purge)
 const CACHE_NAMES = {
