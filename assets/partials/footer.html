@@ -1,0 +1,35 @@
+<!-- Footer Partial: uses {{root}} token for root-relative prefix -->
+<div class="container">
+  <div class="footer-content">
+    <div class="container" role="contentinfo">
+      <h4>Book Shelf Explorer</h4>
+      <p>Your ultimate digital + offline-ready library.</p>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button id="install-footer-btn" class="btn btn-secondary" style="padding:6px 14px;font-size:.7rem;">📥 Install App</button>
+        <a href="{{root}}pages/my_library.html" class="btn btn-outline" style="padding:6px 14px;font-size:.7rem;">🗂️ Personal Library</a>
+      </div>
+    </div>
+    <div class="footer-section">
+      <h4>Quick Search</h4>
+      <div class="search-container" style="max-width:260px;">
+        <input type="text" id="quick-search" class="search-input" placeholder="Search books..." />
+        <button class="search-button" id="quick-search-btn">Go</button>
+      </div>
+      <div id="quick-search-results" class="mini-search-results"></div>
+    </div>
+    <div class="footer-section">
+      <h4>Explore</h4>
+      <ul class="footer-links" style="list-style:none;padding:0;margin:0;display:grid;gap:4px;">
+        <li><a href="{{root}}pages/read-online.html">Read Online</a></li>
+        <li><a href="{{root}}pages/history.html">History</a></li>
+        <li><a href="{{root}}pages/science.html">Science</a></li>
+        <li><a href="{{root}}pages/fiction.html">Fiction</a></li>
+        <li><a href="{{root}}pages/poetry.html">Poetry</a></li>
+        <li><a href="{{root}}pages/selfhelp.html">Self-Help</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p style="margin:0;">&copy; <span id="year"></span> Book Shelf Explorer. Educational project.</p>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiction & Literature - EXPLORER</title>
+  <meta name="theme-color" content="#0d6efd">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" sizes="192x192" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="../assets/icons/icon-512.png">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/google-books.css">
+  
+  <!-- JavaScript -->
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/search.js" defer></script>
+  <script src="../assets/js/google-books.js" defer></script>
+  <script src="../assets/js/layout.js" defer></script>
+</head>
+<body>
+  <header></header>
+  
+  <main>
+    <div style="text-align: center; padding: 20px;">
+      <h1>Fiction & Literature Collection</h1>
+      <p>Immerse yourself in captivating stories and literary masterpieces</p>
+    </div>
+    
+    <div class="book-grid">
+      <div class="book-item">
+        <img src="../assets/images/pexels-valdemaras-d-1647962.jpg" alt="Classic Novels">
+        <h3>Classic Novels</h3>
+        <p>Timeless stories that have shaped literature for generations.</p>
+        <a href="https://en.wikipedia.org/wiki/Classic_book" class="btn" target="_blank">Explore Classics</a>
+      </div>
+      
+      <div class="book-item">
+        <img src="../assets/images/pexels-joshua-135018.jpg" alt="Mystery & Thriller">
+        <h3>Mystery & Thriller</h3>
+        <p>Edge-of-your-seat stories filled with suspense and intrigue.</p>
+        <a href="https://en.wikipedia.org/wiki/Mystery_fiction" class="btn" target="_blank">Read Mysteries</a>
+      </div>
+      
+      <div class="book-item">
+        <img src="../assets/images/pexels-craig-adderley-1563356.jpg" alt="Science Fiction">
+        <h3>Science Fiction</h3>
+        <p>Journey to other worlds and explore the possibilities of tomorrow.</p>
+        <a href="https://en.wikipedia.org/wiki/Science_fiction" class="btn" target="_blank">Discover Sci-Fi</a>
+      </div>
+      
+      <div class="book-item">
+        <img src="../assets/images/pexels-paul-ijsendoorn-33041.jpg" alt="Romance">
+        <h3>Romance</h3>
+        <p>Heartwarming love stories that touch the soul.</p>
+        <a href="https://en.wikipedia.org/wiki/Romance_novel" class="btn" target="_blank">Find Romance</a>
+      </div>
+      
+      <div class="book-item">
+        <img src="../assets/images/pexels-pixabay-50594.jpg" alt="Fantasy">
+        <h3>Fantasy</h3>
+        <p>Magical realms and epic adventures await you.</p>
+        <a href="https://en.wikipedia.org/wiki/Fantasy_literature" class="btn" target="_blank">Enter Fantasy</a>
+      </div>
+      
+      <div class="book-item">
+        <img src="../assets/images/pexels-antonio-avanti-9214104.jpg" alt="Contemporary Fiction">
+        <h3>Contemporary Fiction</h3>
+        <p>Modern stories reflecting today's world and experiences.</p>
+        <a href="https://en.wikipedia.org/wiki/Contemporary_fiction" class="btn" target="_blank">Read Modern</a>
+      </div>
+    </div>
+    
+    <!-- Free Online Fiction Books Section -->
+    <div class="online-reading-section" style="margin-top: 40px;">
+      <h2>📚 Free Fiction Books Online</h2>
+      <p>Dive into amazing fiction stories you can read online for free! From classic literature to contemporary fiction, find your next great read.</p>
+      
+      <div id="fiction-books" class="books-grid">
+        <!-- Google Books API will populate this section -->
+      </div>
+      
+      <div class="feature-list" style="margin-top: 30px;">
+        <div class="feature-item">
+          <h4>📖 Classic Literature</h4>
+          <p>Timeless stories from renowned authors</p>
+        </div>
+        <div class="feature-item">
+          <h4>🔍 Mystery & Thriller</h4>
+          <p>Suspenseful stories that keep you guessing</p>
+        </div>
+        <div class="feature-item">
+          <h4>❤️ Romance</h4>
+          <p>Heartwarming love stories and relationships</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer></footer>
+</body>
+</html>

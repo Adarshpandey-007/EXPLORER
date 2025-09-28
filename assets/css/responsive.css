@@ -1,0 +1,402 @@
+/* Responsive CSS - Media Queries for Book Shelf Explorer */
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1320px;
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.5rem;
+  }
+}
+
+/* Desktop */
+@media (max-width: 1199px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  
+  .grid-4 {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+  .header-content {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .logo {
+    font-size: 1.8rem;
+  }
+  
+  nav {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  nav a {
+    padding: 10px 16px;
+    font-size: 0.95rem;
+  }
+  
+  .hero-section {
+    padding: 60px 0;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .grid-4 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  
+  .section-padding {
+    padding: 40px 0;
+  }
+  
+  .footer-content {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+  }
+}
+
+/* Mobile Large */
+@media (max-width: 767px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  header {
+    padding: 15px 0;
+  }
+  
+  .header-content {
+    gap: 15px;
+  }
+  
+  .logo {
+    font-size: 1.6rem;
+  }
+  
+  nav {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  nav a {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 20px;
+  }
+  
+  main {
+    padding: 30px 0;
+  }
+  
+  .hero-section {
+    padding: 40px 0;
+    margin-bottom: 40px;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .cta-button {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+  }
+  
+  h3 {
+    font-size: 1.3rem;
+  }
+  
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .card-content {
+    padding: 15px;
+  }
+  
+  .card-title {
+    font-size: 1.2rem;
+  }
+  
+  .card-description {
+    font-size: 0.9rem;
+  }
+  
+  .category-content {
+    padding: 15px;
+  }
+  
+  .category-title {
+    font-size: 1.2rem;
+  }
+  
+  .form-container {
+    padding: 30px 20px;
+    margin: 0 15px;
+  }
+  
+  .search-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .search-input {
+    border-radius: 8px;
+  }
+  
+  .search-button {
+    border-radius: 8px;
+    width: 100%;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+  
+  .breadcrumb-list {
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+  }
+  
+  .breadcrumb-item:not(:last-child)::after {
+    margin: 0 5px;
+  }
+}
+
+/* Mobile Small */
+@media (max-width: 575px) {
+  .container {
+    padding: 0 10px;
+  }
+  
+  .logo {
+    font-size: 1.4rem;
+  }
+  
+  nav a {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .hero-section {
+    padding: 30px 0;
+  }
+  
+  .hero-title {
+    font-size: 1.7rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .cta-button {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+  
+  .card-image,
+  .category-image {
+    height: 180px;
+  }
+  
+  .card-content {
+    padding: 12px;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+  
+  .card-description {
+    font-size: 0.85rem;
+  }
+  
+  .card-link {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .category-content {
+    padding: 12px;
+  }
+  
+  .category-title {
+    font-size: 1.1rem;
+  }
+  
+  .form-container {
+    padding: 20px 15px;
+    margin: 0 10px;
+  }
+  
+  .form-input,
+  .form-textarea,
+  .form-select {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+  
+  .btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+  
+  footer {
+    padding: 30px 0 15px;
+  }
+  
+  .footer-section h4 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Ultra Small Mobile */
+@media (max-width: 390px) {
+  nav {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  nav a {
+    width: 100%;
+    text-align: center;
+    padding: 8px 12px;
+  }
+  
+  .hero-title {
+    font-size: 1.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+  
+  .grid-3,
+  .grid-4 {
+    gap: 15px;
+  }
+  
+  .card-image,
+  .category-image {
+    height: 150px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  header,
+  nav,
+  footer,
+  .search-container,
+  .btn,
+  .cta-button {
+    display: none !important;
+  }
+  
+  main {
+    padding: 0 !important;
+  }
+  
+  .card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+  }
+  
+  .hero-section {
+    padding: 20px 0 !important;
+  }
+  
+  .hero-title,
+  .hero-subtitle {
+    color: black !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-color: #000000;
+    --primary-dark: #000000;
+    --text-dark: #000000;
+    --text-light: #333333;
+    --background-light: #ffffff;
+  }
+  
+  .card,
+  .form-container {
+    border: 2px solid #000000;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .card:hover,
+  .category-card:hover,
+  .btn:hover,
+  nav a:hover {
+    transform: none !important;
+  }
+}

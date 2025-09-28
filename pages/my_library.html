@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Library - Book Shelf Explorer</title>
+  <meta name="theme-color" content="#0d6efd" />
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="apple-touch-icon" sizes="192x192" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="../assets/icons/icon-512.png">
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link rel="stylesheet" href="../assets/css/google-books.css" />
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/login.js" defer></script>
+  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/library.js" defer></script>
+  <script src="../assets/js/layout.js" defer></script>
+  <style>
+    .library-hero { text-align:center; padding:50px 15px 20px; }
+    .library-grid { margin-top:20px; }
+    .upload-panel { background:var(--white); padding:24px 26px; border-radius:16px; box-shadow:var(--shadow-medium); margin-bottom:30px; }
+    .upload-panel h2 { margin:0 0 6px; font-size:1.4rem; }
+    .upload-row { display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end; }
+    .upload-row .form-group { flex:1; min-width:180px; }
+    .upload-row input[type=file] { padding:10px; border:2px dashed var(--accent-color); border-radius:8px; background:#fafafa; }
+    .category-inline { display:flex; gap:10px; }
+    .inline-badge { background:var(--secondary-color); padding:4px 10px; border-radius:20px; font-size:.65rem; letter-spacing:.5px; }
+    #library-items { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
+    #library-search { margin-top:10px; }
+    .guard-message { text-align:center; padding:60px 20px; }
+  </style>
+</head>
+<body>
+  <header></header>
+  <main>
+    <div class="container">
+      <div class="library-hero">
+        <h1>Your Personal Library</h1>
+        <p>Upload books, documents, research papers, images, audio, and more. Access them offline. (All stored locally in your browser.)</p>
+      </div>
+
+      <div id="auth-guard" class="guard-message" style="display:none;">
+        <h2>Please Login</h2>
+        <p>You must be logged in to manage your personal library.</p>
+        <a href="login_register.html" class="btn btn-primary">Login / Register</a>
+      </div>
+
+      <div id="library-app" style="display:none;">
+        <section id="quota-section" style="background:var(--white);padding:14px 18px;border-radius:14px;box-shadow:var(--shadow-small);margin-bottom:26px;" aria-labelledby="quota-heading">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+            <strong id="quota-heading" style="font-size:.8rem;letter-spacing:.5px;">STORAGE USAGE</strong>
+            <div id="library-quota-text" style="font-size:.7rem;color:var(--text-light);" aria-live="polite">Calculating…</div>
+          </div>
+          <div style="background:#e9ecef;border-radius:6px;overflow:hidden;height:12px;margin-top:6px;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-describedby="quota-desc" id="quota-progress">
+            <div id="library-quota-bar" style="height:100%;width:0;background:#198754;transition:width .4s,background .4s;"></div>
+          </div>
+          <p id="quota-desc" style="margin:6px 0 0;font-size:.6rem;color:var(--text-light);">Local browser storage only. Usage bar reflects estimated quota when available (varies by browser).</p>
+        </section>
+        <div class="upload-panel">
+          <h2>Upload Files</h2>
+          <p style="margin-top:0;margin-bottom:18px;font-size:.85rem;color:var(--text-light);">No artificial file size limit. Files remain private to this browser profile.</p>
+          <ol style="display:flex;gap:18px;list-style:decimal;padding-left:18px;margin:0 0 16px;font-size:.7rem;color:var(--text-light);">
+            <li>Select files</li>
+            <li>Choose category & optional tags</li>
+            <li>Click Upload</li>
+          </ol>
+          <div class="upload-row">
+            <div class="form-group">
+              <label class="form-label">Select Files</label>
+              <input type="file" id="library-files" multiple aria-describedby="pending-help" />
+            </div>
+            <div class="form-group" style="min-width:160px;">
+              <label class="form-label">Category</label>
+              <select id="library-category" class="form-select">
+                <option value="Uncategorized">Uncategorized</option>
+                <option value="Books">Books</option>
+                <option value="Research">Research</option>
+                <option value="Audio">Audio</option>
+                <option value="Images">Images</option>
+              </select>
+            </div>
+            <div class="form-group" style="min-width:160px;">
+              <label class="form-label">New Category</label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="library-new-category" class="form-input" placeholder="Add category" />
+                <button type="button" id="create-category-btn" class="btn btn-outline" style="white-space:nowrap;">Add</button>
+              </div>
+            </div>
+            <div class="form-group" style="min-width:180px;">
+              <label class="form-label">Tags (comma separated)</label>
+              <input type="text" id="library-tags" class="form-input" placeholder="e.g. physics, draft" />
+            </div>
+            <div class="form-group" style="min-width:140px;display:flex;flex-direction:column;gap:6px;">
+              <label class="form-label" style="visibility:hidden;">Actions</label>
+              <button class="btn btn-primary" id="trigger-file-btn" type="button">Choose</button>
+              <button class="btn btn-secondary" id="start-upload-btn" type="button" disabled>Upload</button>
+            </div>
+          </div>
+          <div id="pending-help" style="font-size:.55rem;color:var(--text-light);margin-top:4px;">Files appear below before uploading. Review & remove any unwanted items.</div>
+          <div id="pending-files-wrapper" style="margin-top:14px;display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;">
+              <strong style="font-size:.65rem;letter-spacing:.5px;">PENDING FILES</strong>
+              <div style="display:flex;gap:6px;">
+                <button type="button" id="clear-pending-btn" class="btn btn-outline" style="font-size:.55rem;padding:4px 8px;">Clear</button>
+              </div>
+            </div>
+            <div id="pending-summary" style="font-size:.6rem;color:var(--text-light);margin-bottom:6px;" aria-live="polite"></div>
+            <ul id="pending-file-list" style="list-style:none;margin:0;padding:0;display:grid;gap:6px;"></ul>
+          </div>
+          <input type="text" id="library-search" class="search-input" placeholder="Search your files..." />
+          <div id="library-tag-filters" style="margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;"></div>
+          <div class="export-import-bar" style="margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+            <button type="button" id="export-meta-btn" class="btn btn-outline" style="font-size:.7rem;">Export Metadata</button>
+            <button type="button" id="export-full-btn" class="btn btn-outline" style="font-size:.7rem;">Export Full (with files)</button>
+            <label class="btn btn-secondary" style="font-size:.7rem;cursor:pointer;">
+              Import JSON <input type="file" id="import-json-input" accept="application/json" style="display:none;" />
+            </label>
+            <span id="import-status" style="font-size:.65rem;color:var(--text-light);"></span>
+          </div>
+          <div id="upload-progress-wrapper" style="display:none;margin-top:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px;">
+              <strong style="font-size:.7rem;letter-spacing:.5px;">UPLOAD PROGRESS</strong>
+              <button type="button" id="upload-cancel-btn" class="btn btn-outline" style="font-size:.6rem;padding:4px 8px;">Cancel</button>
+            </div>
+            <div id="upload-progress-bar-outer" style="background:#e9ecef;border-radius:6px;overflow:hidden;height:10px;">
+              <div id="upload-progress-bar" style="height:100%;width:0;background:linear-gradient(90deg,#0d6efd,#20c997);transition:width .3s;"></div>
+            </div>
+            <div id="upload-progress-text" style="font-size:.65rem;margin-top:4px;color:var(--text-light);" aria-live="polite">Preparing…</div>
+          </div>
+        </div>
+
+        <div id="library-items"></div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div style="max-width:1100px;margin:40px auto 60px;padding:0 16px;font-size:.55rem;display:flex;justify-content:flex-end;opacity:.5;">
+      <a href="admin.html" style="text-decoration:none;color:inherit;">Admin</a>
+    </div>
+  </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded',()=>{ 
+      const guard = document.getElementById('auth-guard');
+      const app = document.getElementById('library-app');
+      const user = window.loginManager && window.loginManager.currentUser;
+      if(user){ guard.style.display='none'; app.style.display='block'; }
+      else { guard.style.display='block'; app.style.display='none'; }
+    });
+  </script>
+</body>
+</html>

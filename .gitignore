@@ -1,0 +1,80 @@
+##############################
+# Book Shelf Explorer .gitignore
+# (Static HTML/JS project + optional serverless functions)
+##############################
+
+# 1. Environment / secrets
+.env
+.env.*
+*.local
+!example.env
+
+# 2. OS junk
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# 3. Editor / tooling
+.vscode/
+.idea/
+*.code-workspace
+
+# 4. Logs & debug output
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 5. Dependency directories (in case future tooling added)
+node_modules/
+jspm_packages/
+
+# 6. Build / dist artifacts (if a bundler is later introduced)
+dist/
+build/
+out/
+coverage/
+.parcel-cache/
+.vuepress/dist
+.next/
+.nuxt/
+.cache/
+
+# 7. Temporary / generated
+tmp/
+temp/
+*.tmp
+*.swp
+*.swo
+
+# 8. Service worker / PWA runtime caches (not source)
+workbox-*.*.js
+sw-build*
+
+# 9. Serverless platform metadata (optional – uncomment if you do NOT want them tracked)
+# .vercel/
+# .netlify/
+
+# 10. Coverage & reports
+lcov.info
+*.lcov
+
+# 11. Misc
+*.bak
+*.orig
+*~
+
+# 12. Generated API mock data (if any)
+mock-data/*.json
+
+# 13. Ignore uploaded user file blobs if ever exported locally
+exports/
+backups/
+
+# 14. IDE specific
+.fleet/
+
+# End of file

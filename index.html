@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Shelf Explorer - Your Digital Library</title>
+    <meta name="description" content="Explore thousands of books across multiple categories. Your ultimate digital library experience.">
+    <meta name="theme-color" content="#0d6efd">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="192x192" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="assets/icons/icon-512.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/google-books.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    
+    <!-- JavaScript -->
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/search.js" defer></script>
+    <script src="assets/js/login.js" defer></script>
+    <script src="assets/js/google-books.js" defer></script>
+    <script src="assets/js/layout.js" defer></script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">📚 Book Shelf Explorer</a>
+                <nav>
+                    <a href="index.html">Home</a>
+                    <a href="pages/history.html">History</a>
+                    <a href="pages/fiction.html">Fiction</a>
+                    <a href="pages/science.html">Science</a>
+                    <a href="pages/poetry.html">Poetry</a>
+                    <a href="pages/selfhelp.html">Self-Help</a>
+                    <a href="pages/childrens.html">Children's</a>
+                    <a href="pages/read-online.html" class="featured-link">📚 Read Online</a>
+                    <a href="pages/contact.html">Contact</a>
+                    <a href="pages/login_register.html" class="login-btn">Login / Register</a>
+                    <a href="#" class="logout-btn" onclick="loginManager.handleLogout()">Logout</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb-list">
+                <li class="breadcrumb-item">
+                    <span class="breadcrumb-current">Home</span>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <h1 class="hero-title">Discover Your Next Great Read</h1>
+                <p class="hero-subtitle">Explore thousands of books across multiple categories in your personal digital library. From classic literature to modern science, find your perfect book today. <strong>Now with FREE online reading!</strong></p>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
+                    <a href="#categories" class="cta-button">Browse Categories</a>
+                    <a href="pages/read-online.html" class="cta-button" style="background: linear-gradient(135deg, #28a745, #20c997); animation: pulse 2s infinite;">📚 Read Online FREE</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="section-padding">
+            <div class="container">
+                <div class="search-container">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search books, authors, categories...">
+                    <button type="submit" class="search-button" onclick="bookSearch.performSearch(document.getElementById('search-input').value)">
+                        Search
+                    </button>
+                </div>
+                <div class="search-suggestions"></div>
+                
+                <!-- Google Books Results -->
+                <div id="google-books-results"></div>
+            </div>
+        </section>
+
+        <!-- Online Reading Feature Section -->
+        <section class="section-padding">
+            <div class="container">
+                <div class="online-reading-section">
+                    <h2>📚 Read Books Online - Absolutely FREE!</h2>
+                    <p>Access thousands of free books from Google Books library. Read classics, contemporary fiction, educational content and more - all in your browser!</p>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <h4>🌟 Free Access</h4>
+                            <p>Read thousands of books completely free through Google Books integration</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>📱 Any Device</h4>
+                            <p>Read on desktop, tablet, or mobile - optimized for all screen sizes</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>🔍 Smart Search</h4>
+                            <p>Find books instantly with our advanced search powered by Google Books API</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>📖 Full Text</h4>
+                            <p>Many books available in full-text format with Google's reader interface</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-light" onclick="document.getElementById('search-input').focus()">
+                        🔍 Start Reading Now
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section id="categories" class="section-padding">
+            <div class="container">
+                <h2 class="text-center mb-3">Browse by Category</h2>
+                <p class="text-center mb-3">Discover books across our carefully curated categories</p>
+                
+                <div class="grid-3">
+                    <div class="category-card fade-in stagger-1">
+                        <img src="assets/images/pexels-antonio-avanti-9214104.jpg" alt="History Books" class="category-image">
+                        <div class="category-content">
+                            <h3 class="category-title">History & Biography</h3>
+                            <p class="category-count">6 Books Available</p>
+                        </div>
+                        <a href="pages/history.html" class="card-overlay-link"></a>
+                    </div>
+                    
+                    <div class="category-card fade-in stagger-2">
+                        <img src="assets/images/pexels-valdemaras-d-1647962.jpg" alt="Fiction Books" class="category-image">
+                        <div class="category-content">
+                            <h3 class="category-title">Fiction & Literature</h3>
+                            <p class="category-count">6 Books Available</p>
+                        </div>
+                        <a href="pages/fiction.html" class="card-overlay-link"></a>
+                    </div>
+                    
+                    <div class="category-card fade-in stagger-3">
+                        <img src="assets/images/pexels-craig-adderley-1563356.jpg" alt="Science Books" class="category-image">
+                        <div class="category-content">
+                            <h3 class="category-title">Science & Nature</h3>
+                            <p class="category-count">6 Books Available</p>
+                        </div>
+                        <a href="pages/science.html" class="card-overlay-link"></a>
+                    </div>
+                    
+                    <div class="category-card fade-in stagger-4">
+                        <img src="assets/images/pexels-joshua-135018.jpg" alt="Poetry Books" class="category-image">
+                        <div class="category-content">
+                            <h3 class="category-title">Poetry & Classics</h3>
+                            <p class="category-count">6 Books Available</p>
+                        </div>
+                        <a href="pages/poetry.html" class="card-overlay-link"></a>
+                    </div>
+                    
+                    <div class="category-card fade-in stagger-5">
+                        <img src="assets/images/pexels-paul-ijsendoorn-33041.jpg" alt="Self-Help Books" class="category-image">
+                        <div class="category-content">
+                            <h3 class="category-title">Self-Help & Growth</h3>
+                            <p class="category-count">6 Books Available</p>
+                        </div>
+                        <a href="pages/selfhelp.html" class="card-overlay-link"></a>
+                    </div>
+                    
+                    <div class="category-card fade-in stagger-6">
+                        <img src="assets/images/pexels-pixabay-50594.jpg" alt="Children's Books" class="category-image">
+                        <div class="category-content">
+                            <h3 class="category-title">Children's Books</h3>
+                            <p class="category-count">6 Books Available</p>
+                        </div>
+                        <a href="pages/childrens.html" class="card-overlay-link"></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Books Section -->
+        <section class="section-padding" style="background: var(--background-light);">
+            <div class="container">
+                <h2 class="text-center mb-3">Featured Books</h2>
+                <p class="text-center mb-3">Handpicked selections from our library</p>
+                
+                <div class="grid-4">
+                    <div class="card fade-in">
+                        <img src="assets/images/pexels-antonio-avanti-9214104.jpg" alt="World War II History" class="card-image">
+                        <div class="card-content">
+                            <h3 class="card-title">The Second World War</h3>
+                            <p class="card-description">A comprehensive look at one of history's most defining conflicts and its lasting impact on our world.</p>
+                            <div class="card-footer">
+                                <a href="pages/history.html" class="card-link">Explore History</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card fade-in">
+                        <img src="assets/images/pexels-valdemaras-d-1647962.jpg" alt="Classic Literature" class="card-image">
+                        <div class="card-content">
+                            <h3 class="card-title">Classic Literature</h3>
+                            <p class="card-description">Timeless stories that have shaped literature for generations and continue to inspire readers today.</p>
+                            <div class="card-footer">
+                                <a href="pages/fiction.html" class="card-link">Discover Fiction</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card fade-in">
+                        <img src="assets/images/pexels-craig-adderley-1563356.jpg" alt="Physics and Astronomy" class="card-image">
+                        <div class="card-content">
+                            <h3 class="card-title">Physics & Astronomy</h3>
+                            <p class="card-description">Uncover the mysteries of the universe and explore the fundamental forces that govern our reality.</p>
+                            <div class="card-footer">
+                                <a href="pages/science.html" class="card-link">Explore Science</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card fade-in">
+                        <img src="assets/images/pexels-joshua-135018.jpg" alt="Poetry Collection" class="card-image">
+                        <div class="card-content">
+                            <h3 class="card-title">Poetry Collection</h3>
+                            <p class="card-description">Immerse yourself in the beauty of language with verses from the greatest poets in history.</p>
+                            <div class="card-footer">
+                                <a href="pages/poetry.html" class="card-link">Read Poetry</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="section-padding">
+            <div class="container">
+                <div class="grid-4 text-center">
+                    <div class="fade-in">
+                        <h3 style="color: var(--primary-color); font-size: 2.5rem;">36+</h3>
+                        <p>Books Available</p>
+                    </div>
+                    <div class="fade-in">
+                        <h3 style="color: var(--primary-color); font-size: 2.5rem;">6</h3>
+                        <p>Categories</p>
+                    </div>
+                    <div class="fade-in">
+                        <h3 style="color: var(--primary-color); font-size: 2.5rem;">100%</h3>
+                        <p>Free Access</p>
+                    </div>
+                    <div class="fade-in">
+                        <h3 style="color: var(--primary-color); font-size: 2.5rem;">24/7</h3>
+                        <p>Available</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (injected) -->
+        <footer>
+            <div style="max-width:1100px;margin:40px auto 60px;padding:0 16px;font-size:.55rem;display:flex;justify-content:flex-end;opacity:.55;">
+                <a href="pages/admin.html" style="text-decoration:none;color:inherit;">Admin</a>
+            </div>
+        </footer>
+
+    <!-- Add search modal styles -->
+    <style>
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .search-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: var(--border-radius);
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-heavy);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--accent-color);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .search-result-item {
+            background: var(--background-light);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        
+        .result-content {
+            flex: 1;
+        }
+        
+        .result-title {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .result-category {
+            color: var(--primary-dark);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .result-description {
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .result-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .tag {
+            background: var(--secondary-color);
+            color: var(--text-dark);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .category-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid var(--accent-color);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .search-suggestions.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--accent-color);
+            transition: background-color 0.2s ease;
+        }
+        
+        .suggestion-item:hover,
+        .suggestion-item.active {
+            background-color: var(--background-light);
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .card-overlay-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            z-index: 1;
+        }
+        
+        mark {
+            background-color: yellow;
+            padding: 1px 3px;
+            border-radius: 2px;
+        }
+        
+        /* Additional animations */
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .loading-state {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded',()=>{ const y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear(); });
+        </script>
+</body>
+</html>

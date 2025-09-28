@@ -1,0 +1,65 @@
+<!-- Header Partial: uses {{root}} token for root-relative prefix -->
+<div class="container" role="banner">
+  <div class="header-content">
+    <a href="{{root}}index.html" class="logo" aria-label="Book Shelf Explorer Home">📚 Book Shelf Explorer</a>
+    <nav class="main-nav" aria-label="Primary">
+      <a data-nav="home" href="{{root}}index.html">Home</a>
+      <a data-nav="history" href="{{root}}pages/history.html">History</a>
+      <a data-nav="fiction" href="{{root}}pages/fiction.html">Fiction</a>
+      <a data-nav="science" href="{{root}}pages/science.html">Science</a>
+      <a data-nav="poetry" href="{{root}}pages/poetry.html">Poetry</a>
+      <a data-nav="selfhelp" href="{{root}}pages/selfhelp.html">Self-Help</a>
+      <a data-nav="children" href="{{root}}pages/childrens.html">Children's</a>
+      <a data-nav="read" class="featured-link" href="{{root}}pages/read-online.html">Read Online</a>
+  <a data-nav="features" href="{{root}}pages/features.html">Features</a>
+      <a data-nav="library" class="library-link" style="display:none;background:linear-gradient(135deg,#0d6efd,#20c997);" href="{{root}}pages/my_library.html">My Library</a>
+      <a data-nav="contact" href="{{root}}pages/contact.html">Contact</a>
+      <span class="nav-auth">
+        <a href="{{root}}pages/login_register.html" class="login-btn">Login / Register</a>
+        <div class="account-wrap" style="display:none;" id="account-menu-root">
+          <button class="account-btn" id="account-btn" aria-haspopup="true" aria-expanded="false" title="Account">
+            <span class="acct-initial" id="acct-initial">U</span>
+          </button>
+          <div class="account-dropdown" id="account-dropdown" role="menu" aria-hidden="true">
+            <div class="acct-head">
+              <div class="acct-avatar" id="acct-avatar">U</div>
+              <div class="acct-meta">
+                <div class="acct-name" id="acct-name">User</div>
+                <div class="acct-email" id="acct-email">user@example.com</div>
+                <form id="username-update-form" class="username-form" autocomplete="off" style="margin-top:6px;display:none;">
+                  <label style="display:flex;flex-direction:column;gap:4px;font-size:.55rem;letter-spacing:.5px;">
+                    <span style="opacity:.7;">Display Name</span>
+                    <input type="text" id="username-new" minlength="2" maxlength="40" placeholder="Enter new name" style="padding:4px 6px;font-size:.6rem;border-radius:6px;border:1px solid rgba(0,0,0,.2);" />
+                  </label>
+                  <div class="username-actions" style="margin-top:6px;display:flex;gap:6px;">
+                    <button type="button" id="username-cancel" class="btn-inline" style="font-size:.55rem;">Cancel</button>
+                    <button type="submit" class="btn-primary-small" style="font-size:.55rem;">Save</button>
+                  </div>
+                  <div id="username-feedback" style="margin-top:4px;font-size:.5rem;min-height:10px;color:#0d6efd;"></div>
+                </form>
+              </div>
+            </div>
+            <div class="acct-section">
+              <button class="acct-action" id="acct-open-password">Update Password</button>
+              <button class="acct-action" id="acct-open-username">Edit Display Name</button>
+              <button class="acct-action" id="acct-logout">Logout</button>
+            </div>
+            <form id="password-update-form" class="password-form hidden" autocomplete="off">
+              <label>New Password
+                <input type="password" id="pw-new" minlength="6" required />
+              </label>
+              <label>Confirm Password
+                <input type="password" id="pw-confirm" minlength="6" required />
+              </label>
+              <div class="pw-feedback" id="pw-feedback"></div>
+              <div class="pw-actions">
+                <button type="button" id="pw-cancel" class="btn-inline">Cancel</button>
+                <button type="submit" class="btn-primary-small">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </span>
+    </nav>
+  </div>
+</div>

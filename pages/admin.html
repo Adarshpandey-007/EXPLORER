@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - Book Shelf Explorer (Local)</title>
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <style>
+    body { background: var(--bg-alt,#f5f7fb); font-size:14px; }
+    .admin-shell { max-width:1000px; margin:40px auto 80px; padding:0 20px; }
+    .admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:26px; }
+    .admin-header h1 { font-size:1.2rem; margin:0; letter-spacing:.5px; }
+    .admin-note { font-size:.6rem; opacity:.7; letter-spacing:.5px; margin-top:4px; }
+    table.user-table { width:100%; border-collapse:collapse; background:#fff; border-radius:14px; overflow:hidden; box-shadow:var(--shadow-medium); }
+    table.user-table thead { background:#0d6efd; color:#fff; font-size:.6rem; letter-spacing:.5px; }
+    table.user-table th, table.user-table td { padding:10px 12px; text-align:left; font-size:.65rem; }
+    table.user-table tbody tr { border-bottom:1px solid rgba(0,0,0,.06); }
+    table.user-table tbody tr:last-child { border-bottom:none; }
+    .actions { display:flex; gap:6px; flex-wrap:wrap; }
+    .actions button { font-size:.55rem; padding:5px 8px; }
+    .pill { display:inline-block; background:#e9eff7; color:#234; font-size:.55rem; padding:2px 6px; border-radius:10px; }
+    .muted { opacity:.6; }
+    .inline-edit { display:flex; gap:4px; }
+    .inline-edit input { font-size:.55rem; padding:4px 6px; border:1px solid rgba(0,0,0,.25); border-radius:6px; }
+    .empty-row td { text-align:center; padding:34px 10px; font-size:.65rem; opacity:.6; }
+    .danger { background:#dc3545 !important; color:#fff !important; }
+    .badge-admin { background:#6f42c1; color:#fff; }
+    .footer-link { position:fixed; bottom:6px; right:10px; font-size:.55rem; opacity:.6; }
+    .search-bar { margin-bottom:14px; display:flex; gap:10px; flex-wrap:wrap; }
+    .search-bar input { flex:1; min-width:240px; font-size:.6rem; padding:6px 8px; border-radius:8px; border:1px solid rgba(0,0,0,.15); }
+    .filter-count { font-size:.55rem; opacity:.6; }
+  </style>
+  <script src="../assets/js/login.js" defer></script>
+</head>
+<body>
+  <div class="admin-shell">
+    <div class="admin-header">
+      <div>
+        <h1>Local Accounts</h1>
+        <div class="admin-note">Manage accounts stored in this browser (client-side demo only).</div>
+      </div>
+      <div>
+        <a href="../index.html" class="btn btn-outline" style="font-size:.6rem;">← Back</a>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <input id="user-search" type="search" placeholder="Search by name or email..." />
+      <div class="filter-count" id="filter-count"></div>
+      <button id="export-users" class="btn btn-outline" style="font-size:.55rem;">Export JSON</button>
+      <button id="import-users" class="btn btn-outline" style="font-size:.55rem;">Import JSON</button>
+      <input type="file" id="import-file" accept="application/json" style="display:none;" />
+    </div>
+
+    <table class="user-table" aria-label="Users table">
+      <thead>
+        <tr>
+          <th style="width:40px;">#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="users-tbody">
+        <tr class="empty-row"><td colspan="5">No users yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer-link">Admin</div>
+  <script>
+    // Minimal admin client-side manager (works with LoginManager storage)
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const tbody = document.getElementById('users-tbody');
+      const searchInput = document.getElementById('user-search');
+      const filterCount = document.getElementById('filter-count');
+      const exportBtn = document.getElementById('export-users');
+      const importBtn = document.getElementById('import-users');
+      const importFile = document.getElementById('import-file');
+
+      function getUsers(){
+        try { return JSON.parse(localStorage.getItem('bookshelf_users')||'[]'); } catch { return []; }
+      }
+      function saveUsers(list){ localStorage.setItem('bookshelf_users', JSON.stringify(list)); }
+
+      function fmtDate(iso){ if(!iso) return ''; try { return new Date(iso).toLocaleDateString(); } catch { return ''; } }
+
+      function render(){
+        const q = (searchInput.value||'').toLowerCase();
+        const users = getUsers();
+        const filtered = users.filter(u=> !q || (u.name||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q));
+        filterCount.textContent = filtered.length !== users.length ? `${filtered.length} / ${users.length}` : `${users.length}`;
+        tbody.innerHTML = '';
+        if(!filtered.length){
+          tbody.innerHTML = '<tr class="empty-row"><td colspan="5">No matching users.</td></tr>';
+          return;
+        }
+        filtered.forEach((u,i)=>{
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${i+1}</td>
+            <td data-col="name">${escapeHtml(u.name||'')}</td>
+            <td>${escapeHtml(u.email||'')}</td>
+            <td class="muted">${fmtDate(u.joinDate)}</td>
+            <td class="actions">
+              <button data-act="imp" title="Impersonate" class="btn btn-outline">Login</button>
+              <button data-act="edit" title="Edit Name" class="btn btn-outline">Edit</button>
+              <button data-act="reset" title="Reset Password" class="btn btn-outline">Reset PW</button>
+              <button data-act="del" title="Delete" class="btn danger">✕</button>
+            </td>`;
+          tr.dataset.email = u.email;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function escapeHtml(str){ return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+
+      tbody.addEventListener('click', async e=>{
+        const btn = e.target.closest('button');
+        if(!btn) return;
+        const act = btn.dataset.act;
+        const tr = btn.closest('tr');
+        const email = tr?.dataset.email;
+        if(!email) return;
+        let users = getUsers();
+        const idx = users.findIndex(u=>u.email===email);
+        if(idx===-1) return;
+        if(act==='edit'){
+          const nameCell = tr.querySelector('[data-col="name"]');
+          const current = users[idx].name || '';
+          nameCell.innerHTML = `<div class="inline-edit"><input value="${escapeHtml(current)}" maxlength="40" /><button data-act="save" class="btn btn-outline">Save</button><button data-act="cancel" class="btn btn-outline">Cancel</button></div>`;
+          nameCell.querySelector('input').focus();
+        } else if(act==='save'){
+          const input = tr.querySelector('input');
+          const val = (input.value||'').trim();
+          if(val.length < 2){ alert('Name too short'); return; }
+          users[idx].name = val;
+          saveUsers(users);
+          render();
+          if(window.loginManager && window.loginManager.currentUser && window.loginManager.currentUser.email===email){
+            window.loginManager.currentUser.name = val;
+            window.loginManager.updateUIForUser();
+            const rawSession = sessionStorage.getItem('bookshelf_current_user');
+            if(rawSession){ try { const obj = JSON.parse(rawSession); obj.name=val; sessionStorage.setItem('bookshelf_current_user', JSON.stringify(obj)); } catch{} }
+            const rawLocal = localStorage.getItem('bookshelf_current_user');
+            if(rawLocal){ try { const obj = JSON.parse(rawLocal); obj.name=val; localStorage.setItem('bookshelf_current_user', JSON.stringify(obj)); } catch{} }
+          }
+        } else if(act==='cancel'){
+          render();
+        } else if(act==='imp'){
+          // Impersonate: set as current user (session) without altering stored list
+          const user = { id: users[idx].id, name: users[idx].name, email: users[idx].email, joinDate: users[idx].joinDate };
+          sessionStorage.setItem('bookshelf_current_user', JSON.stringify(user));
+          window.loginManager && (window.loginManager.currentUser = user, window.loginManager.updateUIForUser());
+          alert('Logged in as '+ (user.name||user.email));
+        } else if(act==='reset'){
+          const newPw = prompt('Enter new password (min 6 chars)');
+          if(!newPw) return;
+          if(newPw.length < 6){ alert('Too short'); return; }
+          try {
+            const hash = await window.loginManager.hashPassword(newPw);
+            users[idx].passwordHash = hash;
+            saveUsers(users);
+            alert('Password reset.');
+          } catch { alert('Error resetting password'); }
+        } else if(act==='del'){
+          if(!confirm('Delete this user? This cannot be undone.')) return;
+          users.splice(idx,1);
+          saveUsers(users);
+          // If deleted current user, logout
+          if(window.loginManager && window.loginManager.currentUser && window.loginManager.currentUser.email===email){
+            window.loginManager.clearCurrentUser();
+          }
+          render();
+        }
+      });
+
+      searchInput.addEventListener('input', render);
+      exportBtn.addEventListener('click', ()=>{
+        const data = JSON.stringify(getUsers(), null, 2);
+        const blob = new Blob([data], {type:'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href=url; a.download='bookshelf_users_export.json'; a.click();
+        setTimeout(()=> URL.revokeObjectURL(url), 1000);
+      });
+      importBtn.addEventListener('click', ()=> importFile.click());
+      importFile.addEventListener('change', e=>{
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const data = JSON.parse(reader.result);
+            if(!Array.isArray(data)){ alert('Invalid JSON'); return; }
+            saveUsers(data);
+            render();
+          } catch { alert('Invalid JSON'); }
+        };
+        reader.readAsText(file);
+      });
+
+      render();
+    });
+  </script>
+</body>
+</html>

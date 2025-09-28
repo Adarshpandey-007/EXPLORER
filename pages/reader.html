@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reader - Book Shelf Explorer</title>
+  <meta name="theme-color" content="#0d6efd" />
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <style>
+    body { background: var(--bg-alt,#f5f7fb); }
+    .reader-shell { max-width: 1100px; margin: 0 auto; padding: 40px 20px 60px; }
+    .reader-toolbar { display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px;background:#fff;padding:12px 16px;border-radius:14px;box-shadow:var(--shadow-small); }
+    .reader-toolbar-left, .reader-toolbar-right { display:flex;gap:10px;align-items:center;flex-wrap:wrap; }
+    .reader-stage { background:#fff; min-height:60vh; border-radius:18px; box-shadow:var(--shadow-medium); position:relative; overflow:hidden; display:flex; }
+    .page-area { flex:1; padding:40px 50px; overflow:auto; font-size:.9rem; line-height:1.55; background:#fdfcf9; font-family: var(--font-serif, Georgia, serif); }
+    .page-area.dark { background:#1f2124; color:#e9ecef; }
+    .page-area-inner { max-width:780px; margin:0 auto; }
+    .page-footer { position:absolute; bottom:10px; right:18px; font-size:.6rem; letter-spacing:.5px; color:#9a8f7d; }
+    .nav-btn { font-size:.65rem; padding:6px 12px; }
+    .spread { column-count:1; column-gap:60px; }
+    @media (min-width: 1100px){ .spread.twocol { column-count:2; }
+      .reader-stage { min-height:70vh; }
+    }
+    .pdf-canvas-wrapper { width:100%; display:flex; justify-content:center; }
+    canvas.pdf-page { max-width:100%; height:auto; box-shadow:0 4px 20px -8px rgba(0,0,0,.3); margin:0 auto; background:#fff; }
+    .slider { width:200px; }
+    /* A4 sheet sizing (portrait) 210mm x 297mm => aspect ~1:1.414. We'll map width responsive */
+    .a4-container { flex:1; display:flex; justify-content:center; align-items:flex-start; padding:20px 4px 30px; overflow:auto; }
+  .a4-sheet { background:#fdfdfc; width:100%; max-width:920px; position:relative; box-shadow:0 6px 28px -8px rgba(0,0,0,.25), 0 0 0 1px rgba(0,0,0,.05); border-radius:12px; padding:46px 48px 60px; overflow:hidden; }
+    .a4-sheet.dark { background:#1e1f22; color:#e8ecef; }
+    .a4-sheet.sepia { background:#f8f3e7; color:#3e2e1a; }
+    .a4-content-flow { height:100%; width:100%; overflow:auto; }
+  @media (max-width: 900px){ .a4-sheet { max-width:96%; padding:38px 34px 54px; } }
+  @media (max-width: 600px){ .a4-sheet { padding:30px 22px 44px; } }
+    /* Focus (distraction-free) mode */
+    .focus-mode body, body.focus-mode { background:#111 !important; }
+    body.focus-mode .reader-shell { padding-top:10px; }
+    body.focus-mode .reader-toolbar { display:none !important; }
+    body.focus-mode .page-footer { display:none !important; }
+    body.focus-mode .reader-stage { box-shadow:none; background:transparent; }
+    body.focus-mode .a4-container { padding:20px 0 40px; }
+    body.focus-mode .a4-sheet { box-shadow:none; background:#0e0e0e; color:#ddd; }
+    body.focus-mode .a4-sheet.sepia { background:#19140b; color:#e9dcc0; }
+    body.focus-mode .a4-sheet.dark { background:#0f1012; color:#e0e3e7; }
+    body.focus-mode .a4-sheet:hover { box-shadow:none; }
+    .focus-hint { position:fixed; top:8px; right:12px; font-size:.55rem; color:#888; opacity:0; transition:opacity .4s; pointer-events:none; letter-spacing:.5px; }
+    body.focus-mode .focus-hint { opacity:.75; }
+    /* Floating back button */
+    .floating-back { position:fixed; top:12px; left:12px; z-index:999; background:rgba(20,20,22,.85); color:#fff; border:none; padding:8px 12px; font-size:.65rem; border-radius:24px; backdrop-filter:blur(6px); box-shadow:0 4px 14px -6px rgba(0,0,0,.5); cursor:pointer; display:flex; align-items:center; gap:6px; }
+    .floating-back:hover { background:rgba(35,35,40,.9); }
+    body.focus-mode .floating-back { opacity:.7; }
+    /* Right-side controls sidebar */
+    .reader-wrapper { position:relative; display:flex; align-items:flex-start; }
+    .control-sidebar { position:sticky; top:16px; right:0; align-self:flex-start; width:180px; display:flex; flex-direction:column; gap:12px; padding:14px 14px 18px; background:rgba(250,250,252,0.95); backdrop-filter:blur(6px); border:1px solid rgba(0,0,0,.05); border-radius:16px; box-shadow:0 4px 20px -10px rgba(0,0,0,.25); font-size:.65rem; }
+    .control-sidebar h6 { margin:0 0 4px; font-size:.55rem; letter-spacing:.8px; opacity:.6; text-transform:uppercase; }
+    .control-group { display:flex; flex-direction:column; gap:6px; }
+    .control-sidebar button, .control-sidebar select, .control-sidebar input[type=range] { font-size:.6rem; }
+    .control-sidebar button { padding:6px 10px; }
+    .control-inline { display:flex; gap:6px; flex-wrap:wrap; }
+    .tag-list { display:flex; flex-wrap:wrap; gap:4px; }
+    .tag-pill { background:#0d6efd; color:#fff; padding:2px 6px; border-radius:12px; font-size:.55rem; display:inline-flex; align-items:center; gap:4px; }
+    .tag-pill button { background:none;border:none;color:#fff;font-size:.55rem;cursor:pointer;line-height:1; }
+    .add-tag-row { display:flex; gap:6px; }
+    .add-tag-row input { flex:1; font-size:.55rem; padding:4px 6px; }
+    .a4-container { margin-right:190px; transition:margin .3s; }
+    /* Override: keep control sidebar visible in focus mode so controls remain accessible */
+    body.focus-mode .control-sidebar { display:flex !important; }
+    /* Maintain margin in focus mode (remove collapse) */
+    /* body.focus-mode .a4-container { margin-right:0; } */
+    @media (max-width: 1050px){ .a4-container { margin-right:0; } .reader-wrapper { flex-direction:column; } .control-sidebar { position:fixed; top:auto; bottom:0; left:0; right:0; width:auto; flex-direction:row; overflow-x:auto; border-radius:18px 18px 0 0; padding:10px 12px; gap:20px; } .control-group { min-width:130px; } }
+  /* Chat Drawer UI Redesign */
+  .chat-tab-toggle { position:fixed; top:40%; right:0; transform:translateY(-50%); z-index:1000; background:linear-gradient(180deg,#0d6efd,#6c5ce7); color:#fff; border:none; border-radius:10px 0 0 10px; padding:14px 10px; font-size:.6rem; writing-mode:vertical-rl; text-orientation:mixed; cursor:pointer; display:flex; align-items:center; gap:6px; font-weight:600; letter-spacing:.5px; box-shadow:0 4px 18px -6px rgba(0,0,0,.45); }
+  .chat-tab-toggle:hover { background:linear-gradient(180deg,#0b5ed7,#5848d9); }
+  .chat-drawer { position:fixed; top:0; right:0; width:380px; max-width:92%; height:100%; background:#fff; box-shadow: -4px 0 28px -8px rgba(0,0,0,.4); border-left:1px solid rgba(0,0,0,.08); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .35s cubic-bezier(.4,.0,.2,1); z-index:1001; font-size:.7rem; }
+  .chat-drawer.open { transform:translateX(0); }
+  .chat-drawer-header { padding:14px 16px 12px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(90deg,#0d6efd,#6c5ce7); color:#fff; }
+  .chat-drawer-header h6 { margin:0; font-size:.65rem; letter-spacing:.6px; font-weight:600; }
+  .chat-drawer-header button { background:none; border:none; color:#fff; font-size:.9rem; cursor:pointer; }
+  .chat-drawer-body { flex:1; overflow:auto; padding:16px 18px 24px; display:flex; flex-direction:column; gap:14px; background:linear-gradient(180deg,#f8faff,#ffffff 60%); }
+  .chat-msg { line-height:1.5; padding:10px 12px; border-radius:14px; max-width:82%; box-shadow:0 2px 6px -2px rgba(0,0,0,.18); white-space:pre-wrap; word-break:break-word; font-size:.62rem; letter-spacing:.2px; }
+  .chat-msg.user { margin-left:auto; background:#0d6efd; color:#fff; }
+  .chat-msg.assistant { background:#f1f4f9; }
+  .chat-msg.error { background:#ffe3e3; color:#7a1d1d; }
+  .chat-composer { padding:12px 14px 16px; border-top:1px solid rgba(0,0,0,.08); background:#fafbfe; display:flex; flex-direction:column; gap:10px; }
+  .chat-composer textarea { resize:none; height:70px; font-size:.62rem; padding:8px 10px; border-radius:10px; border:1px solid rgba(0,0,0,.18); font-family:inherit; line-height:1.5; }
+  .chat-composer-actions { display:flex; gap:8px; justify-content:space-between; align-items:center; }
+  .chat-composer-actions .left { display:flex; gap:8px; align-items:center; }
+  .chat-composer-actions button { font-size:.58rem; padding:8px 14px; }
+  .chat-apikey { display:flex; flex-direction:column; gap:6px; }
+  .chat-apikey input { font-size:.6rem; padding:6px 8px; border-radius:8px; border:1px solid rgba(0,0,0,.2); }
+  .chat-mini-hint { font-size:.48rem; opacity:.55; }
+  body.focus-mode .chat-drawer { background:#101214; color:#dfe3e7; }
+  body.focus-mode .chat-drawer-body { background:linear-gradient(180deg,#14181f,#1a1f28 65%); }
+  body.focus-mode .chat-msg.assistant { background:#20262e; }
+  @media (max-width:820px){ .chat-drawer { width:320px; } }
+  @media (max-width:520px){ .chat-tab-toggle { top:auto; bottom:14px; transform:none; writing-mode:horizontal-tb; border-radius:24px 24px 0 0; padding:10px 16px; } .chat-drawer { width:100%; } }
+  .hidden { display:none !important; }
+  .chat-empty { text-align:center; opacity:.55; font-size:.55rem; padding:40px 10px; }
+  </style>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/login.js" defer></script>
+  <script src="../assets/js/layout.js" defer></script>
+  <script src="../assets/js/geminiClient.js?v=20250928-2" defer></script>
+  <script src="../assets/js/reader.js?v=20250928-2" defer></script>
+</head>
+<body class="focus-mode">
+  <!-- Header intentionally removed for distraction-free reading page -->
+  <main>
+    <button class="floating-back" id="floating-back" title="Back to Library">← Library</button>
+  <div class="reader-shell reader-wrapper" id="reader-root" aria-live="polite">
+      <div class="reader-toolbar" id="reader-toolbar" style="display:none;">
+        <div class="reader-toolbar-left">
+          <button id="back-to-library" class="btn btn-outline nav-btn">← Library</button>
+          <strong id="reader-title" style="font-size:.8rem;letter-spacing:.5px;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></strong>
+          <span id="page-indicator" style="font-size:.65rem;color:var(--text-light);"></span>
+        </div>
+        <div class="reader-toolbar-right">
+          <button id="prev-page" class="btn btn-outline nav-btn" disabled>◀ Prev</button>
+          <button id="next-page" class="btn btn-outline nav-btn" disabled>Next ▶</button>
+          <input type="range" id="page-slider" min="1" max="1" value="1" class="slider" />
+          <select id="view-mode" class="form-select" style="font-size:.65rem;min-width:130px;">
+            <option value="paginated">Paginated</option>
+            <option value="scroll">Scroll</option>
+            <option value="spread">Two-Column</option>
+            <option value="pdf">PDF (if available)</option>
+          </select>
+          <select id="theme-mode" class="form-select" style="font-size:.65rem;min-width:110px;">
+            <option value="light">Light</option>
+            <option value="sepia">Sepia</option>
+            <option value="dark">Dark</option>
+          </select>
+          <select id="font-size" class="form-select" style="font-size:.65rem;min-width:100px;">
+            <option value="small">Small</option>
+            <option value="medium" selected>Medium</option>
+            <option value="large">Large</option>
+          </select>
+          <select id="zoom-mode" class="form-select" style="font-size:.65rem;min-width:120px;">
+            <option value="fit">Fit Page</option>
+            <option value="100" selected>100%</option>
+            <option value="125">125%</option>
+            <option value="150">150%</option>
+            <option value="175">175%</option>
+          </select>
+          <!-- Focus toggle removed: default is always focus mode now -->
+        </div>
+      </div>
+      <div id="reader-stage" class="reader-stage" style="display:none;">
+        <div id="page-area" class="page-area" aria-label="Reading surface">
+          <!-- Inner content host: reader.js injects wrapped A4 sheet via wrapA4() -->
+          <div id="page-area-inner" class="page-area-inner" data-state="empty">
+            <div class="reading-placeholder" style="text-align:center;padding:80px 20px;color:#888;font-size:.7rem;letter-spacing:.5px;">
+              <div style="font-size:1.4rem;opacity:.25;margin-bottom:18px;">📄</div>
+              Preparing pages…
+            </div>
+          </div>
+          <div class="page-infobar" id="page-footer" role="status" aria-live="polite">Loading document…</div>
+        </div>
+      </div>
+      <div id="reader-status" style="text-align:center;color:var(--text-light);margin-top:40px;font-size:.8rem;">Loading document…</div>
+      <aside class="control-sidebar" id="control-sidebar" aria-label="Reader controls" style="display:none;">
+        <button id="sidebar-collapse" class="btn btn-outline" style="align-self:flex-end;font-size:.55rem;padding:4px 8px;">⮜</button>
+        <div class="control-group core-group">
+          <h6>Navigation</h6>
+          <div class="control-inline">
+            <button id="side-prev" class="btn btn-outline" style="flex:1;">◀</button>
+            <button id="side-next" class="btn btn-outline" style="flex:1;">▶</button>
+          </div>
+          <input type="range" id="side-slider" min="1" max="1" value="1" />
+          <div id="side-page-indicator" style="text-align:right;opacity:.6;">1/1</div>
+        </div>
+        <div class="control-group core-group">
+          <h6>Zoom</h6>
+          <select id="side-zoom" class="form-select">
+            <option value="fit">Fit</option>
+            <option value="90">90%</option>
+            <option value="100" selected>100%</option>
+            <option value="110">110%</option>
+            <option value="125">125%</option>
+          </select>
+        </div>
+        <div class="control-group core-group">
+          <h6>View</h6>
+          <select id="side-mode" class="form-select">
+            <option value="paginated">Page</option>
+            <option value="spread">Spread</option>
+            <option value="scroll">Scroll</option>
+            <option value="pdf">PDF</option>
+          </select>
+        </div>
+        <div class="control-group tag-group">
+          <h6>Tags</h6>
+          <div class="tag-list" id="tag-list"></div>
+          <div class="add-tag-row"><input id="new-tag-input" placeholder="Add tag" /><button id="add-tag-btn" class="btn btn-outline">＋</button></div>
+        </div>
+      </aside>
+      <button id="chat-tab-toggle" class="chat-tab-toggle" aria-controls="chat-drawer" aria-expanded="false" title="Open AI Chat">Chat ▷</button>
+      <aside id="chat-drawer" class="chat-drawer" aria-label="AI chat drawer" aria-hidden="true">
+        <div class="chat-drawer-header">
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <h6 style="margin:0;">AI Assistant</h6>
+            <div id="chat-key-status-pill" style="font-size:.5rem;background:rgba(255,255,255,.25);padding:2px 6px;border-radius:12px;display:inline-flex;align-items:center;gap:4px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Key: <span id="chat-key-brief">(none)</span></div>
+            <div style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+              <label for="chat-model" style="font-size:.45rem;letter-spacing:.4px;">Model</label>
+              <select id="chat-model" style="font-size:.5rem;padding:2px 4px;border-radius:4px;">
+                <option value="gemini-2.5-flash" selected>2.5 Flash</option>
+                <option value="gemini-2.5-pro">2.5 Pro</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button id="manage-key" title="Show/Hide API key panel" aria-label="Manage API key" style="font-size:.55rem;">Key</button>
+            <button id="chat-clear" title="Clear conversation" aria-label="Clear conversation" style="font-size:.7rem;">🧹</button>
+            <button id="chat-close" title="Close" aria-label="Close chat">×</button>
+          </div>
+        </div>
+        <div id="chat-messages" class="chat-drawer-body" aria-live="polite">
+          <div class="chat-empty" id="chat-empty">Start a conversation about the current page or ask a question.</div>
+        </div>
+        <div class="chat-composer">
+          <div class="chat-apikey" id="chat-apikey-row" style="display:none;">
+            <label style="font-weight:600;font-size:.55rem;">Gemini API Key</label>
+            <div style="position:relative;display:flex;align-items:center;gap:4px;width:100%;">
+              <input id="chat-api-key" type="password" placeholder="Paste your Gemini API key" style="flex:1;" />
+              <button id="toggle-api-key" title="Show/Hide key" aria-label="Show or hide API key" style="background:#e9ecef;border:1px solid #ced4da;padding:4px 8px;font-size:.55rem;border-radius:4px;cursor:pointer;">👁</button>
+            </div>
+            <div id="api-key-status" class="chat-key-status" style="font-size:.5rem;opacity:.7;margin-top:4px;">No key saved</div>
+            <div class="chat-mini-hint">Stored locally (browser only).</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;">
+              <button id="save-api-key" class="btn btn-outline" style="align-self:flex-start; font-size:.55rem;">Save Key</button>
+              <button id="remove-api-key" class="btn btn-outline" style="align-self:flex-start; font-size:.55rem;background:#f8d7da;color:#842029;border-color:#f5c2c7;">Remove Key</button>
+            </div>
+          </div>
+          <textarea id="chat-input" placeholder="Ask about this page... (Ctrl+Enter)"></textarea>
+          <div class="chat-composer-actions">
+            <div class="left">
+              <button id="chat-insert-page" class="btn btn-outline" title="Insert current page text" style="font-size:.55rem;">Insert Page</button>
+            </div>
+            <button id="chat-send" class="btn btn-primary">Send</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+  <footer>
+    <div style="max-width:1100px;margin:30px auto 50px;padding:0 16px;font-size:.5rem;display:flex;justify-content:flex-end;opacity:.45;">
+      <a href="admin.html" style="text-decoration:none;color:inherit;">Admin</a>
+    </div>
+  </footer>
+</body>
+</html>

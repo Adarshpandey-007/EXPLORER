@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platform Features - Book Shelf Explorer</title>
+  <meta name="description" content="Explore the unified features of Book Shelf Explorer: free online reading + personal offline library." />
+  <meta name="theme-color" content="#0d6efd" />
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="apple-touch-icon" sizes="192x192" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="../assets/icons/icon-512.png">
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link rel="stylesheet" href="../assets/css/google-books.css" />
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/login.js" defer></script>
+  <script src="../assets/js/layout.js" defer></script>
+  <style>
+    .feature-grid {display:grid;gap:28px;margin-top:40px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));}
+    .feature-tile {background:var(--white);padding:22px 22px 26px;border-radius:18px;box-shadow:var(--shadow-medium);position:relative;overflow:hidden;}
+    .feature-tile h3 {margin:0 0 10px;font-size:1.15rem;display:flex;align-items:center;gap:8px;}
+    .feature-tile p {margin:0 0 12px;font-size:.85rem;line-height:1.4;color:var(--text-light);}    
+    .badge {display:inline-block;background:linear-gradient(135deg,#0d6efd,#6610f2);color:#fff;padding:3px 10px;font-size:.6rem;border-radius:20px;letter-spacing:.5px;}
+    .section-intro {max-width:760px;margin:0 auto;text-align:center;padding:40px 16px 10px;}
+    .dual-panel {display:grid;gap:36px;margin-top:50px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:start;}
+    .panel {background:var(--white);padding:28px 30px;border-radius:22px;box-shadow:var(--shadow-medium);}    
+    .panel h2 {margin-top:0;font-size:1.4rem;}
+    .checklist {list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px;}
+    .checklist li {display:flex;align-items:flex-start;gap:10px;font-size:.85rem;line-height:1.3;}
+    .checklist li span.icon {font-size:1rem;line-height:1.1;}
+    .roadmap {margin-top:60px;}
+    .roadmap-steps {list-style:none;padding:0;margin:24px 0 0;display:grid;gap:14px;}
+    .roadmap-steps li {background:#fff;padding:14px 18px;border-radius:14px;box-shadow:var(--shadow-small);font-size:.8rem;display:flex;gap:10px;}
+    .callout {background:linear-gradient(135deg,#0d6efd,#20c997);color:#fff;padding:30px;border-radius:26px;margin:70px auto 40px;max-width:880px;text-align:center;}
+    .callout h2 {margin:0 0 14px;font-size:1.8rem;}
+    .compare {margin-top:70px;}
+    .compare-grid {display:grid;gap:24px;margin-top:26px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+    .compare-card {background:#fff;padding:24px 24px 30px;border-radius:20px;box-shadow:var(--shadow-medium);}    
+    .compare-card h3 {margin:0 0 10px;font-size:1.1rem;}
+    .tagline {font-weight:600;color:var(--primary-color);}
+  </style>
+</head>
+<body>
+  <header></header>
+  <main>
+    <section class="section-intro">
+      <h1>Platform Features</h1>
+      <p class="tagline">Book Shelf Explorer unifies <strong>FREE online reading</strong> with a powerful <strong>offline personal library</strong>.</p>
+      <p>Unlike single-purpose ebook sites, this platform lets you instantly discover books via Google Books <em>and</em> keep your own files (PDFs, images, audio, notes) offline in your browser—searchable, categorized, and exportable.</p>
+      <div style="margin-top:18px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a class="btn btn-primary" href="read-online.html">Start Reading</a>
+        <a class="btn btn-outline" href="my_library.html">Open My Library</a>
+      </div>
+    </section>
+
+    <section style="padding:10px 16px 0;">
+      <div class="feature-grid">
+        <div class="feature-tile">
+          <h3>🔍 Smart Book Search</h3>
+          <p>Google Books integration with debounced queries, inline highlighting, and preview links.</p>
+          <span class="badge">ONLINE</span>
+        </div>
+        <div class="feature-tile">
+          <h3>📚 Offline Personal Library</h3>
+          <p>Store files locally (IndexedDB). Works offline. Full export/import including binary data.</p>
+          <span class="badge" style="background:linear-gradient(135deg,#20c997,#0d6efd);">OFFLINE</span>
+        </div>
+        <div class="feature-tile">
+          <h3>🗂️ Categories & Tags</h3>
+          <p>Custom categories plus multi-tag filters for fast organization and retrieval.</p>
+          <span class="badge">ORGANIZE</span>
+        </div>
+        <div class="feature-tile">
+          <h3>⚡ Instant Search</h3>
+          <p>Client-side full-text style filtering across titles, types, and tags—debounced for speed.</p>
+          <span class="badge">UX</span>
+        </div>
+        <div class="feature-tile">
+          <h3>📑 Reading Progress</h3>
+          <p>Resume where you left off in long text / PDF previews (position persisted).</p>
+          <span class="badge">PERSIST</span>
+        </div>
+        <div class="feature-tile">
+          <h3>🔐 Demo Auth + Hashing</h3>
+          <p>Lightweight login/register with SHA-256 password hashing & legacy upgrade path.</p>
+          <span class="badge">SECURITY</span>
+        </div>
+        <div class="feature-tile">
+          <h3>📦 Export / Import</h3>
+          <p>Backup metadata only or full archive (with files) via downloadable JSON bundles.</p>
+          <span class="badge">PORTABLE</span>
+        </div>
+        <div class="feature-tile">
+          <h3>📲 Installable (PWA)</h3>
+          <p>App manifest + service worker provide offline shell & install prompt experience.</p>
+          <span class="badge">PWA</span>
+        </div>
+        <div class="feature-tile">
+          <h3>🧭 Unified Navigation</h3>
+          <p>Dynamic partial-based layout with breadcrumb and quick search anywhere.</p>
+          <span class="badge">CONSISTENT</span>
+        </div>
+        <div class="feature-tile">
+          <h3>📏 Storage Awareness</h3>
+          <p>Dynamic quota estimation with live usage bar (browser-managed capacity).</p>
+          <span class="badge">STORAGE</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="dual-panel">
+      <div class="panel">
+        <h2>Why This Platform?</h2>
+        <ul class="checklist">
+          <li><span class="icon">✅</span><span>Combines discovery + personal curation.</span></li>
+          <li><span class="icon">✅</span><span>No external account or server required.</span></li>
+          <li><span class="icon">✅</span><span>Private offline storage stays in your browser.</span></li>
+          <li><span class="icon">✅</span><span>Installable like a native app (PWA).</span></li>
+          <li><span class="icon">✅</span><span>Resilience: works even when network is down.</span></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h2>How It Works</h2>
+        <ul class="checklist">
+          <li><span class="icon">⚙️</span><span>IndexedDB stores files & metadata locally.</span></li>
+          <li><span class="icon">⚙️</span><span>Service Worker caches layout & assets.</span></li>
+          <li><span class="icon">⚙️</span><span>Search calls Google Books API (online mode).</span></li>
+          <li><span class="icon">⚙️</span><span>Auth uses localStorage with hashing (demo only).</span></li>
+          <li><span class="icon">⚙️</span><span>Export bundles base64-embed raw file blobs.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="compare">
+      <div class="container">
+        <h2 style="text-align:center;">Online Reading vs Offline Library</h2>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h3>Online Reading</h3>
+            <ul class="checklist" style="margin-top:4px;">
+              <li><span class="icon">🌐</span><span>Google Books discovery</span></li>
+              <li><span class="icon">🚀</span><span>Instant preview links</span></li>
+              <li><span class="icon">🔄</span><span>Always up-to-date</span></li>
+            </ul>
+          </div>
+          <div class="compare-card">
+            <h3>Offline Library</h3>
+            <ul class="checklist" style="margin-top:4px;">
+              <li><span class="icon">📁</span><span>Any file format supported</span></li>
+              <li><span class="icon">🔍</span><span>Local fast searching</span></li>
+              <li><span class="icon">🛡️</span><span>Private to your device</span></li>
+            </ul>
+          </div>
+          <div class="compare-card">
+            <h3>Together</h3>
+            <ul class="checklist" style="margin-top:4px;">
+              <li><span class="icon">🧩</span><span>One interface for both modes</span></li>
+              <li><span class="icon">📦</span><span>Export & migrate easily</span></li>
+              <li><span class="icon">⚡</span><span>Cached shell + live content</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="roadmap container">
+      <h2>Roadmap (Next Iterations)</h2>
+      <ul class="roadmap-steps">
+        <li><strong>Accessibility polish:</strong> Dialog focus trap & keyboard shortcuts.</li>
+        <li><strong>Changelog:</strong> Public versioned history page.</li>
+        <li><strong>Sharing ideas:</strong> Optional link-based metadata share (no files).</li>
+      </ul>
+    </section>
+
+    <div class="callout">
+      <h2>Ready to Explore?</h2>
+      <p>Jump into free reading or start curating your personal collection right now.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px;">
+        <a class="btn btn-light" href="read-online.html">Browse Books</a>
+        <a class="btn btn-outline" style="color:#fff;border-color:#fff;" href="my_library.html">My Library</a>
+      </div>
+    </div>
+  </main>
+  <footer></footer>
+</body>
+</html>

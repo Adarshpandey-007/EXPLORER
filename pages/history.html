@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History & Biography - EXPLORER</title>
+  <meta name="theme-color" content="#0d6efd">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" sizes="192x192" href="../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="../assets/icons/icon-512.png">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/google-books.css">
+  
+  <!-- JavaScript -->
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/search.js" defer></script>
+  <script src="../assets/js/google-books.js" defer></script>
+  <script src="../assets/js/login.js" defer></script>
+  <script src="../assets/js/layout.js" defer></script>
+</head>
+<body>
+  <!-- Header (injected) -->
+  <header></header>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <div class="container">
+      <ul class="breadcrumb-list">
+        <li class="breadcrumb-item">
+          <a href="../index.html" class="breadcrumb-link">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <span class="breadcrumb-current">History & Biography</span>
+        </li>
+        <li class="breadcrumb-item" style="margin-left:auto;">
+          <a href="my_library.html" class="breadcrumb-link" style="font-weight:600;display:inline-flex;align-items:center;gap:6px;">
+            <span style="opacity:.8;">🗂️</span> <span>Your Personal Library</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Main Content -->
+  <main>
+    <div class="container section-padding">
+      <div class="text-center mb-3">
+        <h1>History & Biography Collection</h1>
+        <p>Discover fascinating stories from the past and inspiring biographies</p>
+      </div>
+      
+      <!-- Search Section -->
+      <div class="search-container mb-3">
+        <input type="text" id="search-input" class="search-input" placeholder="Search history books...">
+        <button type="submit" class="search-button" onclick="bookSearch.performSearch(document.getElementById('search-input').value)">
+          Search
+        </button>
+      </div>
+      <div class="search-suggestions"></div>
+      
+      <!-- Books Grid -->
+      <div class="grid-3">
+        <div class="card fade-in stagger-1">
+          <img src="../assets/images/pexels-antonio-avanti-9214104.jpg" alt="World War II History" class="card-image">
+          <div class="card-content">
+            <h3 class="card-title">The Second World War</h3>
+            <p class="card-description">A comprehensive look at one of history's most defining conflicts.</p>
+            <div class="card-footer">
+              <a href="https://en.wikipedia.org/wiki/World_War_II" class="card-link" target="_blank">Learn More</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card fade-in stagger-2">
+          <img src="../assets/images/pexels-valdemaras-d-1647962.jpg" alt="Ancient Civilizations" class="card-image">
+          <div class="card-content">
+            <h3 class="card-title">Ancient Civilizations</h3>
+            <p class="card-description">Explore the great empires and cultures of the ancient world.</p>
+            <div class="card-footer">
+              <a href="https://en.wikipedia.org/wiki/Ancient_history" class="card-link" target="_blank">Learn More</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card fade-in stagger-3">
+          <img src="../assets/images/pexels-joshua-135018.jpg" alt="Biography Collection" class="card-image">
+          <div class="card-content">
+            <h3 class="card-title">Great Leaders</h3>
+            <p class="card-description">Inspiring biographies of leaders who changed the world.</p>
+            <div class="card-footer">
+              <a href="https://en.wikipedia.org/wiki/Leadership" class="card-link" target="_blank">Learn More</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card fade-in stagger-4">
+          <img src="../assets/images/pexels-craig-adderley-1563356.jpg" alt="Medieval History" class="card-image">
+          <div class="card-content">
+            <h3 class="card-title">Medieval Times</h3>
+            <p class="card-description">Journey through the fascinating medieval period.</p>
+            <div class="card-footer">
+              <a href="https://en.wikipedia.org/wiki/Middle_Ages" class="card-link" target="_blank">Learn More</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card fade-in stagger-5">
+          <img src="../assets/images/pexels-paul-ijsendoorn-33041.jpg" alt="American History" class="card-image">
+          <div class="card-content">
+            <h3 class="card-title">American History</h3>
+            <p class="card-description">From colonial times to the modern era.</p>
+            <div class="card-footer">
+              <a href="https://en.wikipedia.org/wiki/History_of_the_United_States" class="card-link" target="_blank">Learn More</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card fade-in stagger-6">
+          <img src="../assets/images/pexels-pixabay-50594.jpg" alt="World History" class="card-image">
+          <div class="card-content">
+            <h3 class="card-title">World History</h3>
+            <p class="card-description">A global perspective on human civilization.</p>
+            <div class="card-footer">
+              <a href="https://en.wikipedia.org/wiki/World_history" class="card-link" target="_blank">Learn More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Footer (injected) -->
+  <footer></footer>
+<script>// page-specific JS (if any) here</script>
+</body>
+</html>

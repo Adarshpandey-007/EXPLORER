@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Free Books Online - Book Shelf Explorer</title>
+    <meta name="description" content="Read thousands of books online for free. Access classic literature, contemporary fiction, educational books and more through Google Books.">
+    <meta name="theme-color" content="#0d6efd">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="apple-touch-icon" sizes="192x192" href="../assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="../assets/icons/icon-512.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/google-books.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- JavaScript -->
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/main.js" defer></script>
+    <script src="../assets/js/search.js" defer></script>
+    <script src="../assets/js/google-books.js" defer></script>
+    <script src="../assets/js/login.js" defer></script>
+    <script src="../assets/js/layout.js" defer></script>
+    
+    <style>
+        .hero-books {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            padding: 80px 0;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .hero-books h1 {
+            color: var(--white);
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero-books p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .search-hero {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: var(--white);
+            color: var(--primary-color);
+        }
+        
+        .books-section {
+            margin: 50px 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-header h2 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .loading-spinner {
+            text-align: center;
+            padding: 50px;
+            color: var(--text-light);
+        }
+        
+        .stats-bar {
+            background: var(--background-light);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin: 40px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        
+        .stat-item h3 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .stat-item p {
+            color: var(--text-medium);
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+        <header></header>
+
+    <!-- Hero Section -->
+    <section class="hero-books">
+        <div class="container">
+            <h1>📚 Read Books Online FREE</h1>
+            <p>Access thousands of books from Google's vast library. Read classics, contemporary fiction, educational content, and more - all in your browser!</p>
+            
+            <div class="search-hero">
+                <div class="search-container" style="margin-bottom: 20px;">
+                    <input type="text" id="main-search" class="search-input" placeholder="Search for books, authors, or topics..." style="background: rgba(255,255,255,0.9); color: var(--text-dark);">
+                    <button class="search-button" onclick="searchBooks()">🔍 Search</button>
+                </div>
+                
+                <div class="category-tabs">
+                    <button class="tab-btn active" data-category="">All Books</button>
+                    <button class="tab-btn" data-category="fiction">Fiction</button>
+                    <button class="tab-btn" data-category="history">History</button>
+                    <button class="tab-btn" data-category="science">Science</button>
+                    <button class="tab-btn" data-category="poetry">Poetry</button>
+                    <button class="tab-btn" data-category="children">Children's</button>
+                    <button class="tab-btn" data-category="education">Education</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <h3>1M+</h3>
+                    <p>Free Books Available</p>
+                </div>
+                <div class="stat-item">
+                    <h3>100%</h3>
+                    <p>Free Access</p>
+                </div>
+                <div class="stat-item">
+                    <h3>24/7</h3>
+                    <p>Available Anytime</p>
+                </div>
+                <div class="stat-item">
+                    <h3>All</h3>
+                    <p>Device Compatible</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Results -->
+    <section class="section-padding">
+        <div class="container">
+            <div id="search-results" style="display: none;">
+                <div class="section-header">
+                    <h2>Search Results</h2>
+                    <p id="results-count"></p>
+                </div>
+                <div id="search-books-grid" class="books-grid"></div>
+            </div>
+            
+            <div id="loading" class="loading-spinner" style="display: none;">
+                <p>🔄 Loading amazing books for you...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="books-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>📖 Classic Literature</h2>
+                <p>Timeless stories from the world's greatest authors</p>
+            </div>
+            <div id="classics-books" class="books-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <section class="books-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🔬 Science & Nature</h2>
+                <p>Explore the wonders of science and natural world</p>
+            </div>
+            <div id="science-books" class="books-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <section class="books-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🎭 Fiction & Stories</h2>
+                <p>Dive into captivating fictional worlds</p>
+            </div>
+            <div id="fiction-books" class="books-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <section class="books-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>👶 Children's Books</h2>
+                <p>Delightful stories for young readers</p>
+            </div>
+            <div id="children-books" class="books-grid">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="online-reading-section">
+                <h2>🚀 How to Read Books Online</h2>
+                <p>It's super easy to start reading! Just follow these simple steps:</p>
+                
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h4>1️⃣ Search</h4>
+                        <p>Use the search bar above to find books by title, author, or topic</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>2️⃣ Choose</h4>
+                        <p>Browse through the results and click on any book that interests you</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>3️⃣ Read</h4>
+                        <p>Click "Read Online" and enjoy your book in Google's reader interface</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>4️⃣ Enjoy</h4>
+                        <p>Read on any device - desktop, tablet, or mobile phone</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <footer></footer>
+
+    <script>
+        // Enhanced functionality for the dedicated reading page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize category tabs
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const searchInput = document.getElementById('main-search');
+            let currentCategory = '';
+            let autoSearch = false;
+
+            // Read query params (?category= & ?q=)
+            const params = new URLSearchParams(window.location.search);
+            const paramCategory = params.get('category');
+            const paramQuery = params.get('q');
+            if (paramCategory) {
+                const btn = Array.from(tabButtons).find(b => b.dataset.category === paramCategory.toLowerCase());
+                if (btn) {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.category;
+                }
+                // Insert back link
+                const hero = document.querySelector('.hero-books .container');
+                if (hero) {
+                    const back = document.createElement('div');
+                    back.style.marginTop = '15px';
+                    back.innerHTML = `<a href="${paramCategory}.html" class="btn btn-small" style="background:#fff;color:var(--primary-color);padding:8px 16px;border-radius:20px;display:inline-block;">← Back to ${paramCategory.charAt(0).toUpperCase()+paramCategory.slice(1)}</a>`;
+                    hero.appendChild(back);
+                }
+            }
+            if (paramQuery) {
+                searchInput.value = paramQuery;
+                autoSearch = true;
+            }
+            
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    // Update current category
+                    currentCategory = this.dataset.category;
+                    // Perform search if there's a query
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        searchBooks();
+                    }
+                });
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchBooks();
+                }
+            });
+            
+            // Load featured books on page load
+            loadFeaturedBooks();
+
+            // If params provided, run initial search after small delay
+            if (autoSearch) {
+                setTimeout(() => searchBooks(), 400);
+            }
+            const yearSpan = document.getElementById('year');
+            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+        });
+        
+        async function searchBooks() {
+            const query = document.getElementById('main-search').value.trim();
+            if (!query) return;
+            
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('search-results');
+            const grid = document.getElementById('search-books-grid');
+            
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            
+            try {
+                const books = await googleBooks.searchBooks(query, currentCategory, 16);
+                
+                if (books.length > 0) {
+                    grid.innerHTML = books.map(book => googleBooks.createBookCard(book)).join('');
+                    document.getElementById('results-count').textContent = `Found ${books.length} books for "${query}"`;
+                    results.style.display = 'block';
+                    
+                    // Scroll to results
+                    results.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    grid.innerHTML = '<p>No books found. Try a different search term.</p>';
+                    results.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                grid.innerHTML = '<p>Sorry, there was an error searching for books. Please try again.</p>';
+                results.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+        
+        async function loadFeaturedBooks() {
+            const categories = [
+                { id: 'classics-books', query: 'classics literature', maxResults: 6 },
+                { id: 'science-books', query: 'science nature', maxResults: 6 },
+                { id: 'fiction-books', query: 'fiction contemporary', maxResults: 6 },
+                { id: 'children-books', query: 'children juvenile', maxResults: 6 }
+            ];
+            
+            for (const category of categories) {
+                try {
+                    const books = await googleBooks.searchBooks(category.query, '', category.maxResults);
+                    const container = document.getElementById(category.id);
+                    if (container && books.length > 0) {
+                        container.innerHTML = books.map(book => googleBooks.createBookCard(book)).join('');
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${category.id}:`, error);
+                }
+                
+                // Small delay between requests to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+        }
+    </script>
+</body>
+</html>
