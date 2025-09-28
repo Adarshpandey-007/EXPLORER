@@ -145,7 +145,7 @@ class ConfigManager {
 const appConfig = new ConfigManager();
 
 // Set the Google Books API key
-appConfig.set('googleBooksApiKey', 'AIzaSyApsDZIcO1cDZRE3oAbL_XdMoWggRHCRhM');
+appConfig.set('googleBooksApiKey', 'GOOGLE_BOOKS_API_KEY');
 
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
