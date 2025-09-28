@@ -12,24 +12,11 @@ class EnhancedBookSearch {
             'Poetry': 'poetry',
             'Self-Help': 'self help',
             'Children': 'juvenile'
-     }
-
-// Global function for opening book reader
-window.openBookReader = function(bookId, title) {
-    if (window.googleBooks) {
-        window.googleBooks.openBookReader(bookId, title);
-    } else {
-        console.warn('Book reader not available - Google Books integration not loaded');
-        window.open(`https://books.google.com/books?id=${bookId}`, '_blank');
-    }
-};
-
-// Initialize the search system
-const bookSearch = new EnhancedBookSearch();
-
-// Export for global use
-window.EnhancedBookSearch = EnhancedBookSearch;
-window.bookSearch = bookSearch;    this.init();
+        };
+        // Provide a minimal fallback dataset used for suggestions when API not ready
+        this.books = this.getLocalBookData();
+        // Kick off async init (no recursion)
+        this.init();
     }
 
     async init() {
@@ -398,8 +385,14 @@ window.bookSearch = bookSearch;    this.init();
 
     highlightQuery(text, query) {
         if (!query) return text;
-        const regex = new RegExp(`(${query})`, 'gi');
-        return text.replace(regex, '<mark>$1</mark>');
+        if (!text) return '';
+        try {
+            const safe = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`(${safe})`, 'gi');
+            return text.replace(regex, '<mark>$1</mark>');
+        } catch (e) {
+            return text;
+        }
     }
 
     bindModalEvents(modal) {
@@ -602,9 +595,17 @@ window.bookSearch = bookSearch;    this.init();
     }
 }
 
-// Initialize search functionality
-const bookSearch = new EnhancedBookSearch();
-
-// Export for global use
+// Singleton instance (avoid multiple constructions that caused call stack overflow)
+if (!window.bookSearch) {
+    window.bookSearch = new EnhancedBookSearch();
+}
 window.EnhancedBookSearch = EnhancedBookSearch;
-window.bookSearch = bookSearch;
+// Global helper for opening the book reader (used by result templates)
+window.openBookReader = function(bookId, title) {
+    if (window.googleBooks) {
+        window.googleBooks.openBookReader(bookId, title);
+    } else {
+        console.warn('Book reader not available - Google Books integration not loaded');
+        window.open(`https://books.google.com/books?id=${bookId}`, '_blank');
+    }
+};
