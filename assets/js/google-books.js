@@ -1,9 +1,7 @@
 // Google Books Integration - Free online book reading
+// Uses Google Books API without authentication (100 requests/day per IP)
 class GoogleBooksAPI {
     constructor() {
-        // Initialize with fallback values first
-        // API key should be loaded from secure backend or omitted (Google Books works without key for basic usage)
-        this.apiKey = null; // Never hardcode keys - use backend proxy or environment config
         this.baseURL = 'https://www.googleapis.com/books/v1/volumes';
         this.cache = new Map();
         this.requestCount = 0;
@@ -11,30 +9,11 @@ class GoogleBooksAPI {
         this.maxRequests = 100;
         // Throttle / backoff helpers
         this.lastRequestTime = 0;
-        this.minIntervalMs = 1100; // at most ~1 req / 1.1s when no key (public quota is low)
+        this.minIntervalMs = 1100; // Rate limiting for unauthenticated API
         this.cooldown429Until = 0; // timestamp until which we pause after 429
         this._notiTimestamps = {};
         
-        // Try to get values from config if available
-        this.initializeConfig();
         this.init();
-    }
-
-    initializeConfig() {
-        // For now, we'll use the API without a key since it needs to be enabled
-        // The API key provided needs Books API enabled in Google Cloud Console
-        this.apiKey = null; // Disable API key for now
-        
-        // Wait for config to be available and update values
-        if (window.appConfig) {
-            // Only use API key if specifically configured and working
-            // this.apiKey = window.appConfig.get('googleBooksApiKey') || this.apiKey;
-            this.baseURL = window.appConfig.get('googleBooksBaseUrl') || this.baseURL;
-            this.maxRequests = window.appConfig.get('maxRequestsPerMinute') || this.maxRequests;
-        } else {
-            // Retry after a short delay if config is not ready
-            setTimeout(() => this.initializeConfig(), 100);
-        }
     }
 
     init() {
@@ -90,13 +69,10 @@ class GoogleBooksAPI {
                 searchQuery += `+subject:${category}`;
             }
 
-            // Build URL with or without API key
-            let url = `${this.baseURL}?q=${encodeURIComponent(searchQuery)}&maxResults=${maxResults}&printType=books`;
-            if (this.apiKey) {
-                url += `&key=${this.apiKey}`;
-            }
+            // Build URL (no authentication required for basic usage)
+            const url = `${this.baseURL}?q=${encodeURIComponent(searchQuery)}&maxResults=${maxResults}&printType=books`;
 
-            console.log('Searching for books with URL:', url);
+            console.log('Searching for books:', searchQuery);
             
             this.lastRequestTime = Date.now();
             const response = await fetch(url);
@@ -143,10 +119,8 @@ class GoogleBooksAPI {
             let errorMessage = 'Unable to search books. ';
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 errorMessage += 'Please check your internet connection.';
-            } else if (error.message.includes('403')) {
-                errorMessage += 'API key issue. Please contact support.';
             } else if (error.message.includes('429')) {
-                errorMessage += 'Too many requests. Applying short cooldown…';
+                errorMessage += 'Rate limit reached. Pausing requests briefly…';
                 this.cooldown429Until = Date.now() + 15000; // 15s cool-down
             } else {
                 errorMessage += 'Please try again later.';
@@ -323,10 +297,7 @@ class GoogleBooksAPI {
         }
 
         try {
-            let url = `${this.baseURL}/${bookId}`;
-            if (this.apiKey) {
-                url += `?key=${this.apiKey}`;
-            }
+            const url = `${this.baseURL}/${bookId}`;
             
             const response = await fetch(url);
             
