@@ -2,7 +2,8 @@
 class GoogleBooksAPI {
     constructor() {
         // Initialize with fallback values first
-        this.apiKey = 'AIzaSyApsDZIcO1cDZRE3oAbL_XdMoWggRHCRhM';
+        // API key should be loaded from secure backend or omitted (Google Books works without key for basic usage)
+        this.apiKey = null; // Never hardcode keys - use backend proxy or environment config
         this.baseURL = 'https://www.googleapis.com/books/v1/volumes';
         this.cache = new Map();
         this.requestCount = 0;
